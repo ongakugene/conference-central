@@ -69,7 +69,7 @@ for session in Session.query(ndb.AND(Session.typeOfSession.IN(allowed_types),
                                 session.startTime.strftime("%H:%M"))
 ```
 
-# 4. When a new session is added to a conference, the speaker is checked. If there is more than one session by this speaker at this conference, a new Memcache entry is also added that features the speaker and session names.
+4. When a new session is added to a conference, the speaker is checked. If there is more than one session by this speaker at this conference, a new Memcache entry is also added that features the speaker and session names.
 
 
 [1]: https://developers.google.com/appengine
