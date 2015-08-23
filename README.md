@@ -28,9 +28,11 @@ App Engine application for the Udacity training course.
 
 Note: 
 For testing the following existing keys can be used:
+```
 Conference Key:	ag5zfmhhbWQtby1zYW5hYXI4CxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQw
 Session 1 Key [Speaker - Nik]: ag5zfmhhbWQtby1zYW5hYXJHCxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQwLEgdTZXNzaW9uGKGcAQw
 Session 2 Key [Speaker - Ali]: ag5zfmhhbWQtby1zYW5hYXJHCxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQwLEgdTZXNzaW9uGLHqAQw
+```
 
 ## 1. Sessions can be added to a conference
 About design decisions:
