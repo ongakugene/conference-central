@@ -24,6 +24,50 @@ App Engine application for the Udacity training course.
 1. Deploy your application.
 
 
+## Solutions for the tasks:
+
+Note: 
+For testing the following existing keys can be used:
+Conference Key:	ag5zfmhhbWQtby1zYW5hYXI4CxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQw
+Session 1 Key [Speaker - Nik]: ag5zfmhhbWQtby1zYW5hYXJHCxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQwLEgdTZXNzaW9uGKGcAQw
+Session 2 Key [Speaker - Ali]: ag5zfmhhbWQtby1zYW5hYXJHCxIHUHJvZmlsZSIbbmlraGlsLmtodWxsYXI3ODZAZ21haWwuY29tDAsSCkNvbmZlcmVuY2UYAQwLEgdTZXNzaW9uGLHqAQw
+
+## 1. Sessions can be added to a conference
+About design decisions:
+For session implementation, I have developed it as child of the conference. Speaker is just a string value representing the name and thus is indexed and used for searching by default. I have created a SessionType class to hold enumeration values for typeOfSession. The design decision is similar to that for T-Shirt sizes. I have chosen TimeProperty for the startTime values.
+
+Name of session is a required field while since there can be multiple highlights, it has repeated set to true.
+
+## 2. Sessions can be added by a user to their wishlist
+
+## 3. Two Additional queries and Query-Problem:
+```
+# 3a. Get all the sessions held in London
+conferences = Conference.query(Conference.city=="London")
+sessions = []
+for conf in conferences:
+	sessions += Session.query(ancestor=conf.key)
+```	
+```
+# 3b. Get conferences with less than 20 people attending
+conferences = Conference.query(Conference.maxAttendees<=20)
+```
+
+# 3c. Query problem
+The query has two conditions for inequality. This can be solved by using "IN" instead of != for one of them as follows: 
+```
+time_last = datetime.datetime.strptime("19:00", "%H:%M").time()
+# Getting all types other than WORKSHOP
+allowed_types = [key for key in SessionType if key != SessionType.WORKSHOP]
+for session in Session.query(ndb.AND(Session.typeOfSession.IN(allowed_types), 
+                                     Session.startTime < time_last)):
+    print '%s of type %s at %s' % (session.name, session.typeOfSession, 
+                                session.startTime.strftime("%H:%M"))
+```
+
+## 4. When a new session is added to a conference, the speaker is checked. If there is more than one session by this speaker at this conference, a new Memcache entry is also added that features the speaker and session names.
+
+
 [1]: https://developers.google.com/appengine
 [2]: http://python.org
 [3]: https://developers.google.com/appengine/docs/python/endpoints/
