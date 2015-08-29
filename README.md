@@ -38,7 +38,7 @@ Session 2 Key [Speaker - Ali]: ag5zfmhhbWQtby1zYW5hYXJHCxIHUHJvZmlsZSIbbmlraGlsL
 
 ## 1. Sessions can be added to a conference
 About design decisions:
-For session implementation, I have developed it as child of the conference. Speaker is just a string value representing the name and thus is indexed and used for searching by default. I have created a SessionType class to hold enumeration values for typeOfSession. The design decision is similar to that for T-Shirt sizes. I have chosen TimeProperty for the startTime values.
+For session implementation, I have developed it as child of the conference. This is because as logically session will be there only in a conference and thus conference (parent) needs to exist first before a session can be vreated under it. A Session can be created with only a valid Conference Key and a name, other fields are provided with sensible defaults. Speaker is just a string value representing the name and thus is indexed and used for searching by default. I have created a SessionType class to hold enumeration values for typeOfSession. The design decision is similar to that for T-Shirt sizes and ensures that arbitrary values never get entered into this field or in other words, we only get from amongst a standard set of values for this field. I have chosen TimeProperty for the startTime values.
 
 Name of session is a required field while since there can be multiple highlights, it has repeated set to true.
 
@@ -58,11 +58,15 @@ conferences = Conference.query(Conference.maxAttendees<=20)
 ```
 
 # 3c. Query problem
-The query has two conditions for inequality. This can be solved by using "IN" instead of != for one of them as follows: 
+The query has two conditions for inequality. This leads to the following error:
 ```
-time_last = datetime.datetime.strptime("19:00", "%H:%M").time()
+BadRequestError: Only one inequality filter per query is supported.
+```
+This can be solved by using "IN" instead of != for one of them as follows: 
+```
+time_last = datetime.strptime("19:00", "%H:%M").time()
 # Getting all types other than WORKSHOP
-allowed_types = [key for key in SessionType if key != SessionType.WORKSHOP]
+allowed_types = [key.name for key in SessionType if key != SessionType.WORKSHOP]
 for session in Session.query(ndb.AND(Session.typeOfSession.IN(allowed_types), 
                                      Session.startTime < time_last)):
     print '%s of type %s at %s' % (session.name, session.typeOfSession, 
