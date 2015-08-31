@@ -47,6 +47,7 @@ Name of session is a required field while since there can be multiple highlights
 ## 3. Two Additional queries and Query-Problem:
 ```
 # 3a. Get all the sessions held in London
+# Implemented as conference.getLondonSessions at "session/london"
 conferences = Conference.query(Conference.city=="London")
 sessions = []
 for conf in conferences:
@@ -54,11 +55,12 @@ for conf in conferences:
 ```	
 ```
 # 3b. Get conferences with less than 20 people attending
+# Implemented as conference.getConferencesLessThanTwenty at "conferences/lesspeople"
 conferences = Conference.query(Conference.maxAttendees<=20)
 ```
 
 # 3c. Query problem
-The query has two conditions for inequality. This leads to the following error:
+The query has two conditions for inequality i.e. one for ensuring that the session is not of type WORKSHOP and one to ensure that the session is not later than 7PM. This leads to the following error:
 ```
 BadRequestError: Only one inequality filter per query is supported.
 ```

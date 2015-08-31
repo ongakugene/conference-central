@@ -349,6 +349,19 @@ class ConferenceApi(remote.Service):
         )
 
 
+    @endpoints.method(message_types.VoidMessage, ConferenceForms,
+            path='conferences/lesspeople',
+            http_method='GET', name='getConferencesLessThanTwenty')
+    def getConferencesLessThanTwenty(self, request):
+        """Return all conferences where less than 20 people are attending."""
+        conferences = Conference.query(Conference.maxAttendees<=20)
+
+        # return individual ConferenceForm object per Conference
+        return ConferenceForms(
+                items=[self._copyConferenceToForm(conf, getattr(conf.key.parent().get(), 'displayName')) for conf in conferences]
+        )      
+
+
 # - - - Profile objects - - - - - - - - - - - - - - - - - - -
 
     def _copyProfileToForm(self, prof):
@@ -630,6 +643,19 @@ class ConferenceApi(remote.Service):
         # return set of SessionForm objects per session
         return SessionForms(
             items=[self._copySessionToForm(session) for session in q]
+        )
+
+    @endpoints.method(message_types.VoidMessage, SessionForms,
+            path='session/london',
+            http_method='GET', name='getLondonSessions')
+    def getLondonSessions(self, request):
+        """Gets all the sessions where venue is London"""
+        conferences = Conference.query(Conference.city=="London")
+        sessions = []
+        for conf in conferences:
+            sessions += Session.query(ancestor=conf.key)        
+        return SessionForms(
+            items=[self._copySessionToForm(session) for session in sessions]
         )
 
 
